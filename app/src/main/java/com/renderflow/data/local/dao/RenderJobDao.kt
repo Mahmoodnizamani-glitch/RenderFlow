@@ -13,6 +13,9 @@ interface RenderJobDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(job: RenderJobEntity)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsert(jobs: List<RenderJobEntity>)
+
     @Query("SELECT * FROM render_jobs WHERE project_id = :projectId ORDER BY created_at DESC")
     fun observeByProject(projectId: String): Flow<List<RenderJobEntity>>
 

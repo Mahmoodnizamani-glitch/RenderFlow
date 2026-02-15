@@ -1,9 +1,12 @@
 package com.renderflow.data.repository
 
+import android.util.Log
 import com.renderflow.data.local.dao.ProjectDao
 import com.renderflow.data.local.dao.TemplateSchemaDao
 import com.renderflow.data.local.entity.ProjectEntity
 import com.renderflow.data.local.entity.TemplateSchemaEntity
+import com.renderflow.data.remote.RenderFlowApi
+import com.renderflow.data.remote.model.toEntity
 import kotlinx.coroutines.flow.Flow
 import java.time.Instant
 import java.util.UUID
@@ -12,12 +15,27 @@ import javax.inject.Inject
 class ProjectRepository @Inject constructor(
     private val projectDao: ProjectDao,
     private val templateSchemaDao: TemplateSchemaDao,
+    private val api: RenderFlowApi,
 ) {
     fun observeAllProjects(): Flow<List<ProjectEntity>> = projectDao.observeAll()
 
     fun observeProject(id: String): Flow<ProjectEntity?> = projectDao.observeById(id)
 
     suspend fun getProject(id: String): ProjectEntity? = projectDao.getById(id)
+
+    suspend fun syncProjects(): Boolean {
+        return try {
+            val dtos = api.getProjects()
+            val entities = dtos.map { it.toEntity() }
+            if (entities.isNotEmpty()) {
+                projectDao.upsert(entities)
+            }
+            true
+        } catch (e: Exception) {
+            Log.e("ProjectRepository", "Sync failed", e)
+            false
+        }
+    }
 
     suspend fun createProject(
         name: String,

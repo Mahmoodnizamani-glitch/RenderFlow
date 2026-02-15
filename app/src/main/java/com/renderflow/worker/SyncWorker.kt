@@ -71,11 +71,26 @@ class SyncWorker @AssistedInject constructor(
      * appropriate API client.
      */
     private suspend fun processPendingAction(id: Long, actionType: String, payload: String) {
-        Log.d(TAG, "Processing action $id: type=$actionType, payload=$payload")
-        // Dispatch to appropriate handler based on actionType:
-        // SUBMIT_RENDER -> call render API
-        // UPLOAD_ASSET -> resumable upload
-        // SYNC_PROPS -> push props delta to server
+        Log.d(TAG, "Processing action $id: type=$actionType")
+
+        when (actionType) {
+            com.renderflow.data.local.entity.ActionType.SUBMIT_RENDER -> {
+                val json = kotlinx.serialization.json.Json.decodeFromString<kotlinx.serialization.json.JsonObject>(payload)
+                val jobId = json["jobId"]?.kotlinx.serialization.json.jsonPrimitive?.content
+                    ?: throw IllegalArgumentException("Missing jobId")
+                val projectId = json["projectId"]?.kotlinx.serialization.json.jsonPrimitive?.content
+                    ?: throw IllegalArgumentException("Missing projectId")
+                val propsJson = json["propsJson"]?.kotlinx.serialization.json.jsonPrimitive?.content ?: "{}"
+
+                val success = renderRepository.submitRemoteRender(jobId, projectId, propsJson)
+                if (!success) {
+                    throw Exception("Remote submission failed for job $jobId")
+                }
+            }
+            else -> {
+                Log.w(TAG, "Unknown action type: $actionType")
+            }
+        }
     }
 
     companion object {

@@ -70,7 +70,7 @@ fun WebViewBridge(
                 onReload = {
                     hasCrashed = false
                     isPageLoaded = false
-                    webView?.loadUrl(templateUrl)
+                    // No need to loadUrl here; WebViewContent recreation will handle it
                 },
             )
         } else {
@@ -99,6 +99,7 @@ fun WebViewBridge(
     // Cleanup on dispose
     DisposableEffect(Unit) {
         onDispose {
+            // Redundant if AndroidView.onRelease is used, but keeps outer safety
             webView?.destroy()
             webView = null
         }
@@ -170,6 +171,9 @@ private fun WebViewContent(
                 onWebViewCreated(this)
                 loadUrl(templateUrl)
             }
+        },
+        onRelease = { webView ->
+            webView.destroy()
         },
         modifier = Modifier.fillMaxSize(),
     )

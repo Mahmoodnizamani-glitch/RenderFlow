@@ -7,23 +7,15 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.renderflow.data.local.entity.UploadStatus
-import com.renderflow.data.repository.RenderRepository
-import com.renderflow.domain.asset.ImageCompressor
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
-import java.io.File
+import com.renderflow.data.remote.TusUploader
 
-/**
- * WorkManager worker that compresses and uploads an asset.
- * Implements on-device compression before upload, with resumable
- * upload stub (TUS protocol interface).
- */
 @HiltWorker
 class AssetUploadWorker @AssistedInject constructor(
     @Assisted appContext: Context,
     @Assisted workerParams: WorkerParameters,
     private val renderRepository: RenderRepository,
     private val imageCompressor: ImageCompressor,
+    private val tusUploader: TusUploader,
 ) : CoroutineWorker(appContext, workerParams) {
 
     override suspend fun doWork(): Result {
@@ -55,10 +47,10 @@ class AssetUploadWorker @AssistedInject constructor(
                 return Result.failure()
             }
 
-            // Step 2: Upload (stub — TUS protocol in production)
+            // Step 2: Upload (TUS protocol)
             renderRepository.updateAssetUploadStatus(assetId, UploadStatus.UPLOADING)
 
-            val remoteUrl = simulateTusUpload(compressedFile, assetId)
+            val remoteUrl = tusUploader.upload(compressedFile, assetId)
 
             // Step 3: Update asset record with remote URL
             renderRepository.updateAssetRemoteUri(assetId, remoteUrl)
@@ -80,20 +72,6 @@ class AssetUploadWorker @AssistedInject constructor(
                 Result.failure()
             }
         }
-    }
-
-    /**
-     * Placeholder for TUS resumable upload.
-     * In production, this would implement the TUS protocol
-     * for reliable, resumable file uploads.
-     */
-    private suspend fun simulateTusUpload(file: File, assetId: String): String {
-        // TUS upload logic would go here:
-        // val tusClient = TusClient(uploadUrl)
-        // val upload = TusUpload(file)
-        // tusClient.resumeOrCreateUpload(upload)
-        Log.d(TAG, "TUS upload stub for asset: $assetId, size=${file.length()} bytes")
-        return "https://cdn.renderflow.io/assets/$assetId"
     }
 
     companion object {

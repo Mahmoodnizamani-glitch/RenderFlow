@@ -24,6 +24,9 @@ interface ProjectDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(project: ProjectEntity)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsert(projects: List<ProjectEntity>)
+
     @Update
     suspend fun update(project: ProjectEntity)
 
