@@ -1,0 +1,53 @@
+{
+    "name": "@renderflow/api",
+    "version": "0.0.1",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "nodemon",
+        "build": "tsc",
+        "start": "node dist/index.js",
+        "lint": "eslint \"src/**/*.ts\"",
+        "typecheck": "tsc --noEmit",
+        "test": "vitest run",
+        "test:watch": "vitest",
+        "db:generate": "drizzle-kit generate",
+        "db:migrate": "drizzle-kit migrate",
+        "db:studio": "drizzle-kit studio"
+    },
+    "dependencies": {
+        "@aws-sdk/client-s3": "^3.991.0",
+        "@aws-sdk/s3-request-presigner": "^3.991.0",
+        "@fastify/cors": "^11.0.0",
+        "@fastify/helmet": "^13.0.0",
+        "@fastify/jwt": "^10.0.0",
+        "@fastify/multipart": "^9.4.0",
+        "@fastify/rate-limit": "^10.2.0",
+        "@renderflow/shared": "*",
+        "@sentry/node": "^10.39.0",
+        "@socket.io/redis-adapter": "^8.3.0",
+        "bcryptjs": "^3.0.3",
+        "bullmq": "^5.69.3",
+        "dotenv": "^16.4.0",
+        "drizzle-orm": "^0.38.0",
+        "fastify": "^5.2.0",
+        "ioredis": "^5.9.3",
+        "jsonwebtoken": "^9.0.3",
+        "postgres": "^3.4.0",
+        "posthog-node": "^5.24.17",
+        "socket.io": "^4.8.3",
+        "zod": "^3.24.0"
+    },
+    "devDependencies": {
+        "@types/bcryptjs": "^2.4.6",
+        "@types/jsonwebtoken": "^9.0.10",
+        "@types/node": "^20.17.0",
+        "drizzle-kit": "^0.30.0",
+        "nodemon": "^3.1.0",
+        "pino-pretty": "^13.0.0",
+        "socket.io-client": "^4.8.3",
+        "tsx": "^4.19.0",
+        "typescript": "^5.6.0",
+        "vitest": "^3.0.0"
+    }
+}

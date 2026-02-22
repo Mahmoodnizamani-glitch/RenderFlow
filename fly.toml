@@ -1,0 +1,60 @@
+# -----------------------------------------------
+# Fly.io — RenderFlow API
+#
+# Deploy: fly deploy --config fly.toml
+# -----------------------------------------------
+
+app = 'renderflow-api'
+primary_region = 'iad'
+
+[build]
+  dockerfile = 'apps/api/Dockerfile'
+
+# Run DB migrations before each deploy (zero-downtime safe)
+[deploy]
+  strategy = 'rolling'
+  release_command = 'node apps/api/dist/db/run-migrations.js'
+
+[env]
+  NODE_ENV = 'production'
+  PORT = '3001'
+  HOST = '0.0.0.0'
+  LOG_LEVEL = 'info'
+
+# HTTP service
+[[services]]
+  protocol = 'tcp'
+  internal_port = 3001
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 1
+
+  [[services.ports]]
+    port = 80
+    handlers = ['http']
+    force_https = true
+
+  [[services.ports]]
+    port = 443
+    handlers = ['tls', 'http']
+
+  # Liveness check
+  [services.concurrency]
+    type = 'connections'
+    hard_limit = 250
+    soft_limit = 200
+
+  [[services.http_checks]]
+    interval = 15000
+    grace_period = '10s'
+    method = 'GET'
+    path = '/api/v1/health'
+    protocol = 'http'
+    timeout = 5000
+
+# Machine sizing
+[[vm]]
+  size = 'shared-cpu-1x'
+  memory = '512mb'
+  cpu_kind = 'shared'
+  cpus = 1

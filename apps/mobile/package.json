@@ -1,0 +1,100 @@
+{
+  "name": "@renderflow/mobile",
+  "version": "0.0.1",
+  "private": true,
+  "main": "expo-router/entry",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "expo start --web",
+    "lint": "eslint \"**/*.{ts,tsx}\"",
+    "typecheck": "tsc --noEmit",
+    "test": "jest"
+  },
+  "jest": {
+    "preset": "jest-expo",
+    "setupFiles": [
+      "./jest.setup.ts"
+    ],
+    "setupFilesAfterEnv": [
+      "./jest.setup.afterEnv.ts"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg|react-native-paper|react-native-vector-icons|react-native-safe-area-context|react-native-reanimated|react-native-gesture-handler|react-native-screens|expo-router|expo-linking|expo-constants|expo-modules-core|expo-clipboard|expo-font|expo-status-bar|expo-splash-screen|expo-system-ui|expo-sqlite|expo-crypto|zustand|immer|drizzle-orm|@renderflow/shared|@shopify/flash-list|expo-document-picker|react-native-mmkv|react-native-webview|@tanstack/react-query)"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "testUtils"
+    ],
+    "moduleNameMapper": {
+      "^~/(.*)$": "<rootDir>/src/$1",
+      "^@renderflow/shared$": "<rootDir>/../../packages/shared/src"
+    }
+  },
+  "dependencies": {
+    "@expo/vector-icons": "^14.0.4",
+    "@react-native-community/netinfo": "^12.0.1",
+    "@renderflow/shared": "*",
+    "@shopify/flash-list": "1.7.3",
+    "@tanstack/react-query": "^5.90.21",
+    "axios": "^1.13.5",
+    "drizzle-orm": "^0.38.4",
+    "expo": "~52.0.0",
+    "expo-build-properties": "~0.13.3",
+    "expo-clipboard": "~7.0.0",
+    "expo-constants": "~17.0.0",
+    "expo-crypto": "~14.0.0",
+    "expo-dev-client": "~5.0.20",
+    "expo-document-picker": "~13.0.3",
+    "expo-file-system": "~18.0.12",
+    "expo-font": "~13.0.0",
+    "expo-image-picker": "~16.0.6",
+    "expo-linking": "~7.0.0",
+    "expo-media-library": "~17.0.6",
+    "expo-notifications": "~0.29.14",
+    "expo-router": "~4.0.0",
+    "expo-secure-store": "~14.0.1",
+    "expo-sharing": "~13.0.1",
+    "expo-splash-screen": "~0.29.0",
+    "expo-sqlite": "~14.0.0",
+    "expo-status-bar": "~2.0.0",
+    "expo-system-ui": "~4.0.0",
+    "expo-updates": "~0.27.5",
+    "expo-web-browser": "~14.0.0",
+    "immer": "^10.2.0",
+    "lucide-react-native": "^0.575.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-native": "0.76.6",
+    "react-native-appwrite": "^0.24.0",
+    "react-native-gesture-handler": "~2.20.0",
+    "react-native-mmkv": "^2.12.2",
+    "react-native-paper": "^5.15.0",
+    "react-native-purchases": "^9.10.3",
+    "react-native-reanimated": "~3.16.0",
+    "react-native-safe-area-context": "4.12.0",
+    "react-native-screens": "~4.4.0",
+    "react-native-svg": "^15.15.3",
+    "react-native-url-polyfill": "^3.0.0",
+    "react-native-web": "~0.19.13",
+    "react-native-webview": "13.12.5",
+    "socket.io-client": "^4.8.3",
+    "zod": "^3.25.76",
+    "zustand": "^5.0.11"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.0",
+    "@testing-library/react-native": "^12.9.0",
+    "@types/jest": "^29.5.14",
+    "@types/react": "~18.3.0",
+    "drizzle-kit": "^0.30.6",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "jest-expo": "~52.0.0",
+    "react-test-renderer": "^18.3.1",
+    "typescript": "^5.9.3"
+  },
+  "overrides": {
+    "react-native": "0.76.6"
+  }
+}

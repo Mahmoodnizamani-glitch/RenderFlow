@@ -1,0 +1,82 @@
+# Grafana Alert Rules for RenderFlow
+# Import into Grafana Cloud via Settings > Alerting > Alert rules
+
+groups:
+  - name: renderflow-api
+    interval: 1m
+    rules:
+      - alert: APIHighErrorRate
+        expr: >
+          sum(rate(http_requests_total{app="renderflow-api",status=~"5.."}[5m]))
+          / sum(rate(http_requests_total{app="renderflow-api"}[5m]))
+          * 100 > 5
+        for: 5m
+        labels:
+          severity: warning
+          team: backend
+        annotations:
+          summary: "API error rate > 5%"
+          description: "API error rate is {{ $value | printf \"%.1f\" }}% over the last 5 minutes."
+
+      - alert: APICriticalErrorRate
+        expr: >
+          sum(rate(http_requests_total{app="renderflow-api",status=~"5.."}[5m]))
+          / sum(rate(http_requests_total{app="renderflow-api"}[5m]))
+          * 100 > 10
+        for: 3m
+        labels:
+          severity: critical
+          team: backend
+        annotations:
+          summary: "API error rate > 10% — CRITICAL"
+          description: "API error rate is {{ $value | printf \"%.1f\" }}%. Investigate immediately."
+          runbook_url: "https://github.com/renderflow/renderflow/blob/main/ops/runbooks/deployment-rollback.md"
+
+      - alert: DatabaseConnectionFailure
+        expr: pg_up{app="renderflow-api"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          team: backend
+        annotations:
+          summary: "Database connection lost"
+          description: "API cannot connect to PostgreSQL."
+          runbook_url: "https://github.com/renderflow/renderflow/blob/main/ops/runbooks/database-connection-issues.md"
+
+  - name: renderflow-workers
+    interval: 1m
+    rules:
+      - alert: RenderQueueSaturation
+        expr: bullmq_queue_waiting{queue="render"} > 50
+        for: 10m
+        labels:
+          severity: warning
+          team: backend
+        annotations:
+          summary: "Render queue depth > 50"
+          description: "{{ $value }} jobs waiting. Consider scaling workers."
+          runbook_url: "https://github.com/renderflow/renderflow/blob/main/ops/runbooks/queue-saturation.md"
+
+      - alert: WorkerDown
+        expr: up{app="renderflow-worker"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          team: backend
+        annotations:
+          summary: "Render worker is down"
+          description: "Worker instance {{ $labels.instance }} is unreachable."
+          runbook_url: "https://github.com/renderflow/renderflow/blob/main/ops/runbooks/worker-crash-loop.md"
+
+      - alert: HighRenderFailureRate
+        expr: >
+          rate(render_jobs_failed_total[10m])
+          / (rate(render_jobs_completed_total[10m]) + rate(render_jobs_failed_total[10m]))
+          * 100 > 20
+        for: 10m
+        labels:
+          severity: warning
+          team: backend
+        annotations:
+          summary: "Render failure rate > 20%"
+          description: "{{ $value | printf \"%.1f\" }}% of render jobs are failing."

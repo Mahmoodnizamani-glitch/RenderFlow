@@ -1,0 +1,5 @@
+Error in expo-updates: The resource `C:\RenderFlow\apps\mobile\apps\mobile\index.js` was not found.
+Stack: Error: The resource `C:\RenderFlow\apps\mobile\apps\mobile\index.js` was not found.
+    at C:\RenderFlow\node_modules\metro\src\IncrementalBundler.js:255:24
+    at gotStat (node:fs:2928:21)
+    at FSReqCallback.oncomplete (node:fs:194:21)

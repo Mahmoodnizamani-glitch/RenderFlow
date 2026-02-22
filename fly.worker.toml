@@ -1,0 +1,41 @@
+# -----------------------------------------------
+# Fly.io — RenderFlow Render Worker
+#
+# Deploy: fly deploy --config fly.worker.toml
+# -----------------------------------------------
+
+app = 'renderflow-worker'
+primary_region = 'iad'
+
+[build]
+  dockerfile = 'workers/render/Dockerfile'
+
+[deploy]
+  strategy = 'rolling'
+
+[env]
+  NODE_ENV = 'production'
+  HEALTH_PORT = '3001'
+  WORKER_CONCURRENCY = '2'
+  JOB_TIMEOUT_MS = '1800000'
+  LOG_LEVEL = 'info'
+
+# Worker health check (not an HTTP service — uses TCP health)
+[[services]]
+  protocol = 'tcp'
+  internal_port = 3001
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 1
+
+  [[services.tcp_checks]]
+    interval = 15000
+    timeout = 5000
+    grace_period = '15s'
+
+# Workers need more resources for Chromium + FFmpeg rendering
+[[vm]]
+  size = 'performance-2x'
+  memory = '4096mb'
+  cpu_kind = 'performance'
+  cpus = 2

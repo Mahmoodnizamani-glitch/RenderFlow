@@ -1,0 +1,112 @@
+name: Deploy API
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/api/**'
+      - 'packages/shared/**'
+      - 'fly.toml'
+
+concurrency:
+  group: deploy-api
+  cancel-in-progress: false
+
+jobs:
+  # ---------------------------------------------------------------
+  # Run full CI first
+  # ---------------------------------------------------------------
+  ci:
+    name: CI Gate
+    uses: ./.github/workflows/ci.yml
+
+  # ---------------------------------------------------------------
+  # Deploy to staging
+  # ---------------------------------------------------------------
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [ci]
+    environment: staging
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Fly CLI
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy to staging
+        run: flyctl deploy --config fly.toml --app renderflow-api-staging --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+  # ---------------------------------------------------------------
+  # Smoke tests against staging
+  # ---------------------------------------------------------------
+  smoke-test:
+    name: Smoke Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [deploy-staging]
+
+    steps:
+      - name: Health check
+        run: |
+          for i in 1 2 3 4 5; do
+            STATUS=$(curl -s -o /dev/null -w '%{http_code}' https://renderflow-api-staging.fly.dev/api/v1/health)
+            if [ "$STATUS" = "200" ]; then
+              echo "Health check passed"
+              exit 0
+            fi
+            echo "Attempt $i: got $STATUS, retrying in 10s..."
+            sleep 10
+          done
+          echo "Health check failed after 5 attempts"
+          exit 1
+
+      - name: Readiness check
+        run: |
+          STATUS=$(curl -s -o /dev/null -w '%{http_code}' https://renderflow-api-staging.fly.dev/api/v1/ready)
+          if [ "$STATUS" = "200" ]; then
+            echo "Readiness check passed"
+          else
+            echo "WARNING: Readiness check returned $STATUS (dependencies may not be configured)"
+          fi
+
+  # ---------------------------------------------------------------
+  # Deploy to production
+  # ---------------------------------------------------------------
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [smoke-test]
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Fly CLI
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy to production
+        run: flyctl deploy --config fly.toml --app renderflow-api --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+      - name: Notify Sentry of release
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          curl -sL https://sentry.io/api/0/organizations/${SENTRY_ORG}/releases/ \
+            -H "Authorization: Bearer ${SENTRY_AUTH_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -d "{\"version\":\"api@${VERSION}-${GITHUB_SHA:0:7}\",\"projects\":[\"${SENTRY_PROJECT}\"]}" \
+            || echo "Sentry release notification failed (non-blocking)"
+        env:
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        if: env.SENTRY_AUTH_TOKEN != ''

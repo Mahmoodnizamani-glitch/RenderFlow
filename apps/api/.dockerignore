@@ -1,0 +1,16 @@
+node_modules
+dist
+.turbo
+.env
+.env.*
+*.test.ts
+__tests__
+coverage
+*.tsbuildinfo
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+nodemon.json
+vitest.config.ts
+drizzle.config.ts

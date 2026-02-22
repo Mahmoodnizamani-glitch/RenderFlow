@@ -1,0 +1,68 @@
+# -----------------------------------------------
+# RenderFlow — Local Development Stack
+#
+# Usage:
+#   docker compose up --build
+#
+# Services: PostgreSQL, Redis, API
+# -----------------------------------------------
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: renderflow
+      POSTGRES_PASSWORD: renderflow_dev
+      POSTGRES_DB: renderflow
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U renderflow" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - HOST=0.0.0.0
+      - DATABASE_URL=postgresql://renderflow:renderflow_dev@postgres:5432/renderflow
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=${JWT_SECRET:-change-me-in-production-min-16-chars}
+      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET:-change-me-too-in-production-min-16}
+      - R2_ENDPOINT=${R2_ENDPOINT:-}
+      - R2_ACCESS_KEY=${R2_ACCESS_KEY:-}
+      - R2_SECRET_KEY=${R2_SECRET_KEY:-}
+      - R2_BUCKET=${R2_BUCKET:-renderflow-videos}
+      - CORS_ORIGIN=${CORS_ORIGIN:-*}
+      - LOG_LEVEL=debug
+    restart: unless-stopped
+
+volumes:
+  pg-data:
+  redis-data:

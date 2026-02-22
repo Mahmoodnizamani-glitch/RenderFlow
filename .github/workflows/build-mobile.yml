@@ -1,0 +1,108 @@
+name: Build Mobile
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+concurrency:
+  group: build-mobile
+  cancel-in-progress: false
+
+jobs:
+  # ---------------------------------------------------------------
+  # Run mobile tests
+  # ---------------------------------------------------------------
+  test:
+    name: Mobile Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run mobile tests
+        run: npm run test --workspace=@renderflow/mobile
+
+  # ---------------------------------------------------------------
+  # EAS Build
+  # ---------------------------------------------------------------
+  build:
+    name: EAS Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    needs: [test]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup EAS CLI
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Build Android
+        run: eas build --platform android --profile production --non-interactive
+        working-directory: apps/mobile
+
+      - name: Build iOS
+        run: eas build --platform ios --profile production --non-interactive
+        working-directory: apps/mobile
+
+  # ---------------------------------------------------------------
+  # Submit to stores (internal testing track)
+  # ---------------------------------------------------------------
+  submit:
+    name: Submit to Stores
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: [build]
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup EAS CLI
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Submit Android (internal track)
+        run: eas submit --platform android --profile production --non-interactive
+        working-directory: apps/mobile
+
+      - name: Submit iOS (TestFlight)
+        run: eas submit --platform ios --profile production --non-interactive
+        working-directory: apps/mobile

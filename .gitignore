@@ -1,17 +1,65 @@
-# Built files
-/build
-/app/build
-/.gradle
+# ===========================================================================
+# RenderFlow Monorepo — Root .gitignore
+# ===========================================================================
 
-# IDE
-/.idea
-*.iml
-local.properties
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
 
-# OS
-.DS_Store
-Thumbs.db
+# Build outputs
+dist/
+build/
+.next/
+*.tsbuildinfo
 
-# Signing
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Keystores & credentials (NEVER commit)
 *.jks
 *.keystore
+*.p8
+*.p12
+*.key
+*.pem
+*.mobileprovision
+*.orig.*
+credentials.json
+signing.properties
+
+# Turborepo
+.turbo/
+
+# Expo
+.expo/
+
+# IDE & editor
+.idea/
+.vscode/settings.json
+.vscode/launch.json
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Test & coverage
+coverage/
+.nyc_output/
+test-output.txt
+
+# Misc
+*.tgz
+.cache/

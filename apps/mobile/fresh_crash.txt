@@ -1,0 +1,42 @@
+
+02-20 22:14:51.721 E/AndroidRuntime( 3416): Process: com.renderflow.app, PID: 3416
+02-20 22:46:44.565 E/AndroidRuntime(32710): Process: com.renderflow.app, PID: 32710
+02-20 22:46:46.795 E/AndroidRuntime(  464): Process: com.renderflow.app, PID: 464
+02-20 23:04:33.880 E/AndroidRuntime(28524): Process: com.renderflow.app, PID: 28524
+02-20 23:05:57.184 E/AndroidRuntime( 9983): Process: com.renderflow.app, PID: 9983
+02-20 23:07:04.938 E/AndroidRuntime(13092): Process: com.renderflow.app, PID: 13092
+02-20 23:07:11.135 E/AndroidRuntime(13950): Process: com.renderflow.app, PID: 13950
+02-20 23:11:56.712 E/AndroidRuntime(22631): Process: com.renderflow.app, PID: 22631
+02-21 00:11:13.679 E/AndroidRuntime(20612): Process: com.renderflow.app, PID: 20612
+02-21 00:11:15.977 E/AndroidRuntime(20813): Process: com.renderflow.app, PID: 20813
+02-21 00:11:24.101 E/AndroidRuntime(21404): Process: com.renderflow.app, PID: 21404
+02-21 02:05:38.411 E/AndroidRuntime(25668): Process: com.renderflow.app, PID: 25668
+02-21 02:05:58.433 E/AndroidRuntime( 4257): Process: com.renderflow.app, PID: 4257
+02-21 02:05:58.437 W/OplusEapManager handleErrorInfo sendEvent: ( 3348): com.renderflow.app happenedcrash
+02-21 02:05:58.545 D/WindowManager( 3348): NFW_findFocusedWindowIfNeeded:Window{2a3fca6 u0 Application Error: com.renderflow.app} mCurrentFocus:null
+02-21 02:05:58.545 V/WindowManager( 3348): Changing focus from null to Window{2a3fca6 u0 Application Error: com.renderflow.app},diplayid=0
+02-21 02:05:58.546 I/WindowManager( 3348): addWindow: New client android.view.OplusViewRootImplHooks$ColorW@7b83ffc : window=Window{2a3fca6 u0 Application Error: com.renderflow.app}
+02-21 02:05:58.561 D/CoreBackPreview( 3348): Window{2a3fca6 u0 Application Error: com.renderflow.app}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.WindowOnBackInvokedDispatcher$OnBackInvokedCallbackWrapper@1983bdf, mPriority=0, mIsAnimationCallback=false}
+02-21 02:05:58.563 V/WindowManager( 3348): Relayout Window{2a3fca6 u0 Application Error: com.renderflow.app}: viewVisibility=0, oldvis=0, req=1080x627, vsysui=, x=0, y=0
+02-21 02:05:58.563 I/WindowManager( 3348): Window{2a3fca6 u0 Application Error: com.renderflow.app} state from NO_SURFACE to DRAW_PENDING; reason: resetDrawState
+02-21 02:05:58.565 D/WindowManager( 3348): NFW_findFocusedWindowIfNeeded:Window{2a3fca6 u0 Application Error: com.renderflow.app} mCurrentFocus:Window{2a3fca6 u0 Application Error: com.renderflow.app}
+02-21 02:05:58.582 D/WindowManager( 3348): NFW_findFocusedWindowIfNeeded:Window{2a3fca6 u0 Application Error: com.renderflow.app} mCurrentFocus:Window{2a3fca6 u0 Application Error: com.renderflow.app}
+02-21 02:05:58.613 I/WindowManager( 3348): Window{2a3fca6 u0 Application Error: com.renderflow.app} state from DRAW_PENDING to COMMIT_DRAW_PENDING; reason: finishDrawingLocked
+02-21 02:05:58.617 I/WindowManager( 3348): Window{2a3fca6 u0 Application Error: com.renderflow.app} state from COMMIT_DRAW_PENDING to READY_TO_SHOW; reason: commitFinishDrawingLocked
+02-21 02:05:58.619 I/WindowManager( 3348): Window{2a3fca6 u0 Application Error: com.renderflow.app} state from READY_TO_SHOW to HAS_DRAWN; reason: performShowLocked
+02-21 02:05:58.626 D/SurfaceAnimationRunner( 3348): onAnimationStart:Surface(name=Surface(name=2a3fca6 Application Error: com.renderflow.app)/@0x9a6eaf4 - animation-leash of window_animation)/@0x460921d
+02-21 02:05:58.776 D/SurfaceAnimationRunner( 3348): onAnimationEnd:Surface(name=Surface(name=2a3fca6 Application Error: com.renderflow.app)/@0x9a6eaf4 - animation-leash of window_animation)/@0x460921d
+02-21 02:05:58.983 D/WindowManager( 3348): NFW_findFocusedWindowIfNeeded:Window{2a3fca6 u0 Application Error: com.renderflow.app} mCurrentFocus:Window{2a3fca6 u0 Application Error: com.renderflow.app}
+02-21 02:05:58.992 D/WindowManager( 3348): NFW_findFocusedWindowIfNeeded:Window{2a3fca6 u0 Application Error: com.renderflow.app} mCurrentFocus:Window{2a3fca6 u0 Application Error: com.renderflow.app}
+02-21 02:05:59.030 D/WindowManager( 3348): NFW_findFocusedWindowIfNeeded:Window{2a3fca6 u0 Application Error: com.renderflow.app} mCurrentFocus:Window{2a3fca6 u0 Application Error: com.renderflow.app}
+02-21 02:05:59.645 D/CoreBackPreview( 3348): Window{2a3fca6 u0 Application Error: com.renderflow.app}: Setting back callback null
+02-21 02:05:59.651 D/WindowManager( 3348): NFW_findFocusedWindowIfNeeded:Window{c6fbf8 u0 com.android.settings/com.android.settings.applications.InstalledAppDetails} mCurrentFocus:Window{2a3fca6 u0 Application Error: com.renderflow.app EXITING}
+02-21 02:05:59.651 V/WindowManager( 3348): Changing focus from Window{2a3fca6 u0 Application Error: com.renderflow.app EXITING} to Window{c6fbf8 u0 com.android.settings/com.android.settings.applications.InstalledAppDetails},diplayid=0
+02-21 02:05:59.659 D/SurfaceAnimationRunner( 3348): onAnimationStart:Surface(name=Surface(name=2a3fca6 Application Error: com.renderflow.app)/@0x9a6eaf4 - animation-leash of window_animation)/@0x65762bd
+02-21 02:05:59.767 D/SurfaceAnimationRunner( 3348): onAnimationEnd:Surface(name=Surface(name=2a3fca6 Application Error: com.renderflow.app)/@0x9a6eaf4 - animation-leash of window_animation)/@0x65762bd
+02-21 02:05:59.775 I/WindowManager( 3348): Window{2a3fca6 u0 Application Error: com.renderflow.app} state from HAS_DRAWN to NO_SURFACE; reason: destroySurface
+02-21 02:06:00.389 E/OplusThermalStats( 3348): Error getting package info: com.renderflow.app
+02-21 02:06:01.258 E/AndroidRuntime( 4931): Process: com.renderflow.app, PID: 4931
+02-21 02:06:01.261 W/OplusEapManager handleErrorInfo sendEvent: ( 3348): com.renderflow.app happenedcrash
+02-21 02:06:01.755 W/WindowManager( 3348): Exception thrown during dispatchAppVisibility Window{97b3a15 u0 com.renderflow.app/com.renderflow.app.MainActivity EXITING}
+

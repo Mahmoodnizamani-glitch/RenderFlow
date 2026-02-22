@@ -1,0 +1,83 @@
+name: Deploy Worker
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'workers/render/**'
+      - 'fly.worker.toml'
+
+concurrency:
+  group: deploy-worker
+  cancel-in-progress: false
+
+jobs:
+  # ---------------------------------------------------------------
+  # Run worker tests
+  # ---------------------------------------------------------------
+  test:
+    name: Worker Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run worker tests
+        run: npm run test --workspace=@renderflow/render-worker
+
+  # ---------------------------------------------------------------
+  # Security scan
+  # ---------------------------------------------------------------
+  security:
+    name: Image Security Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [test]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build worker image
+        run: docker build -t renderflow-worker:ci ./workers/render
+
+      - name: Trivy scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: renderflow-worker:ci
+          format: table
+          exit-code: '1'
+          severity: CRITICAL,HIGH
+
+  # ---------------------------------------------------------------
+  # Deploy
+  # ---------------------------------------------------------------
+  deploy:
+    name: Deploy Worker
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: [security]
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Fly CLI
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy worker
+        run: flyctl deploy --config fly.worker.toml --app renderflow-worker --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

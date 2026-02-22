@@ -1,0 +1,99 @@
+
+02-20 22:14:51.721  3416  3463 E AndroidRuntime: FATAL EXCEPTION: mqt_native_modules
+02-20 22:46:44.565 32710 32767 E AndroidRuntime: FATAL EXCEPTION: mqt_native_modules
+02-20 22:46:46.795   464   518 E AndroidRuntime: FATAL EXCEPTION: mqt_native_modules
+02-20 23:04:33.880 28524 30630 E AndroidRuntime: FATAL EXCEPTION: mqt_native_modules
+02-20 23:05:57.184  9983 10123 E AndroidRuntime: FATAL EXCEPTION: mqt_native_modules
+02-20 23:07:04.938 13092 13348 E AndroidRuntime: FATAL EXCEPTION: mqt_native_modules
+02-20 23:07:11.135 13950 14005 E AndroidRuntime: FATAL EXCEPTION: mqt_native_modules
+02-20 23:11:52.150  3348  4055 E AuthSessionCoordinator: Error unable to find auth operation : authEndedFor(userId=0 ,biometricStrength=15, sensorId=0, requestId=1939, wasSuccessful=true)
+02-20 23:11:52.377  3348  3625 V WindowManager:     startWCT=WindowContainerTransaction { changes = {} hops = [] errorCallbackToken=null taskFragmentOrganizer=null }
+02-20 23:11:54.273  4382  4445 V WindowManagerShell: Directly starting a new transition type=3 wct=WindowContainerTransaction { changes = {} hops = [{PendingIntent: options=Bundle[mParcelledData.dataSize=648]}] errorCallbackToken=null taskFragmentOrganizer=null } handler=com.android.wm.shell.recents.RecentsTransitionHandler@c8b610a
+02-20 23:11:54.296  3348  3653 E OplusThermalStats: Error getting package info: com.android.launcher
+02-20 23:11:54.301  3348  3625 V WindowManager:     startWCT=WindowContainerTransaction { changes = {} hops = [{PendingIntent: options=Bundle[{android.activity.splashScreenStyle=-1, android.activity.sourceInfo=android.app.ActivityOptions$SourceInfo@2c92c47, deviceintegration:remotetask.launchOption=-1, android:activity.animAbortListener=null, androidx.activity.extra=Bundle[EMPTY_PARCEL], android.activity.transientLaunch=true, android:activity.mZoomLaunchFlags=0}]}] errorCallbackToken=null taskFragmentOrganizer=null }
+02-20 23:11:54.459  3348  3847 W ActivityManager: pid 12182 com.android.launcher sent binder code 23 with flags 2 to frozen apps and got error -74
+02-20 23:11:54.513  3348  3628 W ActivityManager: pid 3348 system sent binder code 42 with flags 1 to frozen apps and got error -32
+02-20 23:11:54.513  3348  3628 D ActivityManager: Too many transaction errors, throttling freezer binder callback.
+02-20 23:11:55.416 20594 20781 E YT.qoe  : Pinging https://s.youtube.com/api/stats/qoe?cl=872219859&event=streamingstats&ns=yt&cpn=7uyXveyS7oTdICVK&cplatform=mobile&cbr=app.revanced.android.youtube&cff=SMALL_FORM_FACTOR&c=android&cmodel=NE2213&cos=Android&soc=QTI%3ASM8450&csdk=35&cbrver=20.14.43&cver=20.14.43&cosver=15&cbrand=OnePlus&qclc=ChA3dXlYdmV5UzdvVGRJQ1ZLGgA%3D%0A&conn=0.808:3&bat=0.814:0.770:1&error=0.807:qoe.client::0.000:ForcedFinishCreate&seq=1 
+02-20 23:11:55.419 20594 20628 E YT.qoe  : Pinging https://s.youtube.com/api/stats/qoe?cl=872219859&event=streamingstats&ns=yt&cpn=7uyXveyS7oTdICVK&cplatform=mobile&cbr=app.revanced.android.youtube&cff=SMALL_FORM_FACTOR&c=android&cmodel=NE2213&cos=Android&soc=QTI%3ASM8450&csdk=35&cbrver=20.14.43&cver=20.14.43&cosver=15&cbrand=OnePlus&qclc=ChA3dXlYdmV5UzdvVGRJQ1ZLGgA%3D%0A&vis=0.000:5&conn=0.001:3&bat=0.001:0.770:1,0.816:0.770:1&vps=0.000:N&ctmp=du:used.849257746.1073741824;avail.52062187520.112360222720;inst.ytm.0.ytm.849257746&error=0.105:onesie.net.badstatus::0.000:rc.413;er.2004;rn.1;shost.rr2---sn-b5a5mtc-3ips.googlevideo.com;e.j.brm;s.j.btb.b.477:aglf.b.3:afuh.b.132:afwh.run.33:anba.run.21;m.Response%20code_%20413,0.105:onesie.innertube.fallback::0.000:e.j.E;s.j.afvn.lC.24:anaz.lC.16:aokv.run.36:aoke.exec.1:arq.j.1;ce.j.CancellationE;cs.j.arq.l.33:arq.get.3;m.Task%20was%20cancelled.&vc=1553866176&seq=2 
+02-20 23:11:55.480  3348  4709 D MediaSessionService: onSessionPlaybackStateChanged: record=app.revanced.android.youtube/YouTube playerlib/231 (userId=0) playbackState=PlaybackState {state=STOPPED(1), position=0, buffered position=0, speed=1.0, updated=715490339, actions=8192, custom actions=[], active item id=-1, error=null}
+02-20 23:11:55.793  4382  4405 E ReflectionUtils: java.lang.NoSuchMethodException: dalvik.system.VMRuntime.SupressionGC [int, int]
+02-20 23:11:55.796  3348  3625 D callGcSupression: java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+02-20 23:11:55.800  4382  4473 D OplusShellStartingWindowManager: adjustSuggestedWindowType originType: 1, wi: StartingWindowInfo{taskId=13633 targetActivityInfo=null displayId=0 topActivityType=1 preferredStartingWindowType=8b insetsState=null topWindowLayoutParams=null mainWindowLayoutParams=null splashScreenThemeResId 7f120213, exi: OplusStartingWindowExtendedInfo{mAppToken=android.os.BinderProxy@7388bb1, mSupportSplashScreenPreview=false, mIsSystemApp=false, mIsExceptionListApp=false, mPreviewBitmap=null, mShouldDrawBackground=false, mForceLightMode=false, mForceNightMode=false, mNotSupportNightMode=false, mForcePreview=false, mForceBigIcon=false, mQuickStartingSurface=null, mForceSolidColorSplash=false}
+02-20 23:11:55.801  4382  4473 D OplusShellStartingWindowManager: adjustSuggestedWindowType: skip no-system app and no-exception list app
+02-20 23:11:55.804 12182 12182 D callGcSupression: java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+02-20 23:11:55.809  3348  3629 D callGcDesupression: java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+02-20 23:11:55.810  3348  3625 V WindowManager:     startWCT=WindowContainerTransaction { changes = {} hops = [] errorCallbackToken=null taskFragmentOrganizer=null }
+02-20 23:11:55.829  4382  4382 D callGcSupression: java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+02-20 23:11:55.914 22631 22631 D OplusActivityThreadExtImpl: java.lang.NoSuchMethodException: dalvik.system.VMRuntime.SupressionGC [int, int]
+02-20 23:11:55.939 22631 22648 D OplusAppHeapManager: java.lang.NoSuchMethodException: dalvik.system.VMRuntime.updateProcessValue [int, int, int]
+02-20 23:11:55.951 22631 22631 D callGcSupression: java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+02-20 23:11:55.955  3348  3653 E OplusThermalStats: Error getting package info: com.renderflow.app
+02-20 23:11:55.997 22631 22631 E SchedAssist: sysOpen failed with error=Permission denied
+02-20 23:11:55.997 22631 22631 E SchedAssist: open sharedFd failed with error=Permission denied
+02-20 23:11:55.997 22631 22631 E SchedAssist: open sharedFd failed with error=Permission denied
+02-20 23:11:55.997 22631 22631 E SchedAssist: open sharedFd failed with error=Permission denied
+02-20 23:11:55.997 22631 22631 E SchedAssist: open sharedFd failed with error=No such file or directory
+02-20 23:11:56.012 22631 22631 D callGcSupression: java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+02-20 23:11:56.058  4382  4445 E ReflectionUtils: java.lang.NoSuchMethodException: dalvik.system.VMRuntime.DesupressionGC [int]
+02-20 23:11:56.100 22631 22665 W dev.expo.updates: {"timestamp":1771611116100,"message":"The expo-updates system is explicitly disabled. To enable it, set the enabled setting to true.","code":"InitializationError","level":"warn"}
+02-20 23:11:56.116 22631 22631 D callGcSupression: java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+02-20 23:11:56.123  3348  3568 D Theia.NoFocusWindow: FocusWindowErrorScene cancelCheckFreezeScreen
+02-20 23:11:56.190 22631 22631 D callGcSupression: java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+02-20 23:11:56.498 22631 22676 I ReactNativeJS: Running "main"
+02-20 23:11:56.604 12182 12182 D callGcSupression: java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+02-20 23:11:56.628 22631 22631 D callGcSupression: java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+02-20 23:11:56.662  4382  4473 D OplusScrollToTopManager: Splash Screen com.renderflow.app, unregisterSystemUIBroadcastReceiver failed java.lang.IllegalArgumentException: Receiver not registered: android.view.OplusScrollToTopManager$2@961eca6
+02-20 23:11:56.712 22631 22677 E AndroidRuntime: FATAL EXCEPTION: mqt_native_modules
+02-20 23:11:56.712  3348  4724 D OplusAppStartupMonitor: notifyUnstableAppInfo: Bundle[{unstableTime=1771611116712, reason=crash, userId=0, exceptionMsg=No ViewManager found for class RNSVGPath, exceptionClass=com.facebook.react.uimanager.Q, app_channel_type=unstable, packageName=com.renderflow.app, unstable_restrict_switch=true}]
+02-20 23:11:56.715  3348  3981 W OplusEapManager handleErrorInfo sendEvent: : com.renderflow.app happenedcrash
+02-20 23:11:56.719  3348  3981 D OplusAmsUtilsFeatrue: detectExceptionsForOIDT type:0
+02-20 23:11:56.743 22631 22676 E ReactNativeJS: Error: Requiring unknown module "undefined"., js engine: hermes
+02-20 23:11:56.756 12182 12182 D callGcSupression: java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+02-20 23:11:56.757 22631 22631 D callGcSupression: java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+02-20 23:11:56.770  3348  3653 E OplusThermalStats: Error getting package info: com.android.launcher
+02-20 23:11:56.779  3348  5005 D Theia.NoFocusWindow: FocusWindowErrorScene cancelCheckFreezeScreen
+02-20 23:11:56.800 12182 12182 D callGcSupression: java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+02-20 23:11:56.816  3348  3629 D callGcDesupression: java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+02-20 23:11:56.824  3348  3626 I ActivityManager: hookHandleApplicationCrashBeforeInner do not showErrorDialog shouldThottle= false
+02-20 23:11:56.831 12182 12182 D OplusGcSupressionExtImpl: callGcSupression : java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+02-20 23:11:56.871  3348  3625 D callGcSupression: java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+02-20 23:11:56.873  3348  3625 V WindowManager:     startWCT=WindowContainerTransaction { changes = {} hops = [] errorCallbackToken=null taskFragmentOrganizer=null }
+02-20 23:11:56.894  4382  4382 D callGcSupression: java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+02-20 23:11:56.894 12182 12182 D callGcSupression: java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+02-20 23:11:56.896 11442 11442 D callGcSupression: java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+02-20 23:11:56.896 12330 12330 D callGcSupression: java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+02-20 23:11:56.898 12192 12192 D callGcSupression: java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+02-20 23:11:56.941  3800  3800 E InputEventReceiver: channel 'ClientState{b88f165 mUid=10114 mPid=5938 mSelfReportedDisplayId=0} (client)' ~ Publisher closed input channel or an error occurred. events=0x9
+02-20 23:11:56.960  3800  3800 E InputEventReceiver: channel 'ClientState{b509714 mUid=10431 mPid=22631 mSelfReportedDisplayId=0} (client)' ~ Publisher closed input channel or an error occurred. events=0x9
+02-20 23:11:57.046 22717 22717 D OplusActivityThreadExtImpl: java.lang.NoSuchMethodException: dalvik.system.VMRuntime.SupressionGC [int, int]
+02-20 23:11:57.055 22717 22728 D OplusAppHeapManager: java.lang.NoSuchMethodException: dalvik.system.VMRuntime.updateProcessValue [int, int, int]
+02-20 23:11:57.062 22717 22717 D callGcSupression: java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+02-20 23:11:57.183 22717 22717 E SchedAssist: sysOpen failed with error=Permission denied
+02-20 23:11:57.184 22717 22717 E SchedAssist: open sharedFd failed with error=Permission denied
+02-20 23:11:57.184 22717 22717 E SchedAssist: open sharedFd failed with error=Permission denied
+02-20 23:11:57.184 22717 22717 E SchedAssist: open sharedFd failed with error=Permission denied
+02-20 23:11:57.184 22717 22717 E SchedAssist: open sharedFd failed with error=No such file or directory
+02-20 23:11:57.510 12182 12182 D OplusGcSupressionExtImpl: callGcDesupression : java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+02-20 23:11:57.516  3348  4704 W ActivityManager: pid 3348 system sent binder code 7 with flags 1 to frozen apps and got error -32
+02-20 23:11:57.516  3348  4704 D ActivityManager: Too many transaction errors, throttling freezer binder callback.
+02-20 23:11:57.517  3348  4704 W WindowManager: Exception thrown during dispatchAppVisibility Window{6e915a1 u0 com.renderflow.app/com.renderflow.app.MainActivity EXITING}
+02-20 23:11:57.517  3348  4704 W WindowManager: android.os.DeadObjectException
+02-20 23:11:58.347  4910  5001 D SubsysRadioResponse: setSyncWithApResponse info.error = 0
+02-20 23:11:58.351  3017  3206 E QmiVsClient: error : PARAM_CHECK_RESP_NO_RETURN 3
+02-20 23:11:58.352  3017  3206 D QmiClient: QmiErrorToRadioApiError qmiError 3, radio result 1
+02-20 23:11:58.355  4910  5001 E CommandException: Unrecognized subsys errno 2
+02-20 23:11:58.356  4910  4910 E ServiceMessengerHelper: handleSendErrorResponse error 1
+02-20 23:11:59.308  3348  8939 E TaskPersister: File error accessing recents directory (directory doesn't exist?).
+02-20 23:12:02.220  4382  4408 E ReflectionUtils: java.lang.NoSuchMethodException: dalvik.system.VMRuntime.SupressionGC [int, int]
+02-20 23:12:02.239 12182 12182 D callGcSupression: java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+02-20 23:12:02.239  3348  3625 D callGcSupression: java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+02-20 23:12:02.247  3733  3733 D callGcSupression: java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+02-20 23:12:02.248  3348  3629 D callGcDesupression: java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+02-20 23:12:02.249  3348  3625 V WindowManager:     startWCT=WindowContainerTransaction { changes = {} hops = [] errorCallbackToken=null taskFragmentOrganizer=null }
+02-20 23:12:02.259  4382  4473 D OplusShellStartingWindowManager: adjustSuggestedWindowType originType: 1, wi: StartingWindowInfo{taskId=13635 targetActivityInfo=null displayId=0 topActivityType=1 preferredStartingWindowType=8f insetsState=null topWindowLayoutParams=null mainWindowLayoutParams=null splashScreenThemeResId 7f15046a, exi: OplusStartingWindowExtendedInfo{mAppToken=android.os.BinderProxy@3b6bbea, mSupportSplashScreenPreview=false, mIsSystemApp=false, mIsExceptionListApp=false, mPreviewBitmap=null, mShouldDrawBackground=false, mForceLightMode=false, mForceNightMode=false, mNotSupportNightMode=false, mForcePreview=false, mForceBigIcon=false, mQuickStartingSurface=null, mForceSolidColorSplash=false}
+02-20 23:12:02.259  4382  4473 D OplusShellStartingWindowManager: adjustSuggestedWindowType: skip no-system app and no-exception list app
+02-20 23:12:02.263  3348  3653 E OplusThermalStats: Error getting package info: com.whatsapp
+02-20 23:12:02.268 12182 12182 D OplusGcSupressionExtImpl: callGcSupression : java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+02-20 23:12:02.286  4382  4382 D callGcSupression: java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Object java.lang.reflect.Method.invoke(java.lang.Object, java.lang.Object[])' on a null object reference
+

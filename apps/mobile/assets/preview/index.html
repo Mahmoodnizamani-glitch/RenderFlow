@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>RenderFlow Preview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #121212;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        #preview-root {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Error overlay */
+        #error-overlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(18, 18, 18, 0.95);
+            color: #E17055;
+            padding: 16px;
+            overflow: auto;
+            z-index: 1000;
+            font-size: 13px;
+        }
+
+        #error-overlay.visible {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #error-overlay h3 {
+            color: #E17055;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        #error-overlay pre {
+            background: #1E1E1E;
+            border-radius: 8px;
+            padding: 12px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 12px;
+            line-height: 1.5;
+            color: #ffa07a;
+            flex: 1;
+        }
+
+        /* Loading state */
+        #loading-state {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background: #121212;
+            color: #9E9E9E;
+            z-index: 999;
+        }
+
+        #loading-state.hidden {
+            display: none;
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid #2C2C2C;
+            border-top-color: #6C5CE7;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 12px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="loading-state">
+        <div class="spinner"></div>
+        <span>Loading preview…</span>
+    </div>
+
+    <div id="error-overlay">
+        <h3>⚠ Preview Error</h3>
+        <pre id="error-message"></pre>
+    </div>
+
+    <div id="preview-root"></div>
+
+    <!-- React 18 UMD -->
+    <script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+
+    <!-- Remotion core + player UMD bundles -->
+    <script crossorigin src="https://unpkg.com/@remotion/core@4.0.242/dist/esm/index.mjs" type="module"></script>
+    <script crossorigin src="https://unpkg.com/@remotion/player@4.0.242/dist/esm/index.mjs" type="module"></script>
+
+    <script type="module">
+        /**
+         * RenderFlow Preview — Remotion Player sandbox.
+         *
+         * Receives user Remotion code via postMessage, instantiates it using
+         * Function constructor inside the WebView sandbox, and renders it
+         * using the Remotion Player.
+         */
+
+        // -------------------------------------------------------------------------
+        // Remotion imports (ESM from CDN)
+        // -------------------------------------------------------------------------
+
+        import * as RemotionCore from 'https://unpkg.com/@remotion/core@4.0.242/dist/esm/index.mjs';
+        import { Player } from 'https://unpkg.com/@remotion/player@4.0.242/dist/esm/index.mjs';
+
+        // -------------------------------------------------------------------------
+        // Globals for user code
+        // -------------------------------------------------------------------------
+
+        const {
+            useCurrentFrame,
+            useVideoConfig,
+            interpolate,
+            spring,
+            Easing,
+            Sequence,
+            AbsoluteFill,
+            Img,
+            Audio,
+            Video,
+            staticFile,
+            continueRender,
+            delayRender,
+        } = RemotionCore;
+
+        // Make available to user code via the sandbox
+        window.__REMOTION__ = {
+            useCurrentFrame,
+            useVideoConfig,
+            interpolate,
+            spring,
+            Easing,
+            Sequence,
+            AbsoluteFill,
+            Img,
+            Audio,
+            Video,
+            staticFile,
+            continueRender,
+            delayRender,
+            React,
+        };
+
+        // -------------------------------------------------------------------------
+        // State
+        // -------------------------------------------------------------------------
+
+        let playerRef = null;
+        let currentScale = 0.667; // 720p default
+        let currentSpeed = 1;
+        let isLooping = true;
+        let currentComponent = null;
+        let compositionConfig = { width: 1920, height: 1080, fps: 30, durationInFrames: 150 };
+
+        const loadingEl = document.getElementById('loading-state');
+        const errorOverlay = document.getElementById('error-overlay');
+        const errorMessage = document.getElementById('error-message');
+        const previewRoot = document.getElementById('preview-root');
+
+        // -------------------------------------------------------------------------
+        // Post message helper — sends JSON to React Native
+        // -------------------------------------------------------------------------
+
+        function postToRN(type, payload) {
+            if (window.ReactNativeWebView && window.ReactNativeWebView.postMessage) {
+                window.ReactNativeWebView.postMessage(JSON.stringify({ type, payload }));
+            }
+        }
+
+        // -------------------------------------------------------------------------
+        // Error handling
+        // -------------------------------------------------------------------------
+
+        function showError(msg, stack) {
+            errorOverlay.classList.add('visible');
+            errorMessage.textContent = msg + (stack ? '\n\n' + stack : '');
+            postToRN('error', { message: msg, stack: stack || '' });
+        }
+
+        function hideError() {
+            errorOverlay.classList.remove('visible');
+            errorMessage.textContent = '';
+        }
+
+        window.addEventListener('error', function (e) {
+            showError(e.message || 'Unknown error', e.error?.stack || '');
+        });
+
+        window.addEventListener('unhandledrejection', function (e) {
+            var msg = e.reason?.message || String(e.reason) || 'Unhandled promise rejection';
+            showError(msg, e.reason?.stack || '');
+        });
+
+        // -------------------------------------------------------------------------
+        // Component loader — sandbox user code via Function constructor
+        // -------------------------------------------------------------------------
+
+        function loadUserComponent(code) {
+            hideError();
+
+            try {
+                // Build a Function that has access to React and Remotion globals
+                // The function returns the default export (the component)
+                const wrappedCode = `
+      "use strict";
+      const React = __REMOTION__.React;
+      const { createElement, useState, useEffect, useCallback, useMemo, useRef, Fragment } = React;
+      const {
+        useCurrentFrame, useVideoConfig, interpolate, spring, Easing,
+        Sequence, AbsoluteFill, Img, Audio, Video, staticFile,
+        continueRender, delayRender
+      } = window.__REMOTION__;
+
+      // Provide a minimal 'remotion' module simulation
+      const remotion = window.__REMOTION__;
+
+      ${code}
+
+      // Try to find the default export
+      if (typeof MyComposition !== 'undefined') return MyComposition;
+      if (typeof Composition !== 'undefined') return Composition;
+      if (typeof App !== 'undefined') return App;
+      if (typeof Main !== 'undefined') return Main;
+      if (typeof Scene !== 'undefined') return Scene;
+      if (typeof Component !== 'undefined') return Component;
+
+      // Last resort: find any function that looks like a React component
+      return null;
+    `;
+
+                const factory = new Function(wrappedCode);
+                const UserComponent = factory();
+
+                if (!UserComponent) {
+                    showError(
+                        'No component found. Export a component named MyComposition, Composition, App, Main, Scene, or Component.',
+                        ''
+                    );
+                    return null;
+                }
+
+                // Test that the component can be called (basic validation)
+                return UserComponent;
+            } catch (err) {
+                showError(
+                    'Failed to compile code: ' + (err.message || String(err)),
+                    err.stack || ''
+                );
+                return null;
+            }
+        }
+
+        // -------------------------------------------------------------------------
+        // Render the Remotion Player
+        // -------------------------------------------------------------------------
+
+        function renderPlayer() {
+            if (!currentComponent) {
+                ReactDOM.render(null, previewRoot);
+                return;
+            }
+
+            const scaledWidth = Math.round(compositionConfig.width * currentScale);
+            const scaledHeight = Math.round(compositionConfig.height * currentScale);
+
+            // ErrorBoundary wrapper to catch render errors
+            class PreviewErrorBoundary extends React.Component {
+                constructor(props) {
+                    super(props);
+                    this.state = { hasError: false, error: null };
+                }
+                static getDerivedStateFromError(error) {
+                    return { hasError: true, error };
+                }
+                componentDidCatch(error, info) {
+                    showError(
+                        'Component render error: ' + (error.message || String(error)),
+                        error.stack || info?.componentStack || ''
+                    );
+                }
+                render() {
+                    if (this.state.hasError) return null;
+                    return this.props.children;
+                }
+            }
+
+            const playerElement = React.createElement(
+                PreviewErrorBoundary,
+                null,
+                React.createElement(Player, {
+                    ref: function (ref) { playerRef = ref; },
+                    component: currentComponent,
+                    compositionWidth: compositionConfig.width,
+                    compositionHeight: compositionConfig.height,
+                    fps: compositionConfig.fps,
+                    durationInFrames: compositionConfig.durationInFrames,
+                    style: {
+                        width: scaledWidth + 'px',
+                        height: scaledHeight + 'px',
+                        background: '#000',
+                    },
+                    loop: isLooping,
+                    playbackRate: currentSpeed,
+                    controls: false,
+                    autoPlay: false,
+                    inputProps: {},
+                    renderLoading: function () {
+                        return React.createElement('div', {
+                            style: {
+                                width: '100%', height: '100%',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                background: '#1E1E1E', color: '#9E9E9E', fontSize: '14px',
+                            }
+                        }, 'Loading…');
+                    },
+                })
+            );
+
+            ReactDOM.render(playerElement, previewRoot);
+
+            // Set up frame reporting after a short delay for ref to attach
+            setTimeout(function () {
+                if (playerRef) {
+                    // Listen for frame changes
+                    var lastFrame = -1;
+                    setInterval(function () {
+                        if (playerRef && typeof playerRef.getCurrentFrame === 'function') {
+                            var frame = playerRef.getCurrentFrame();
+                            if (frame !== lastFrame) {
+                                lastFrame = frame;
+                                postToRN('frame-update', { frame: frame });
+                            }
+                        }
+                    }, 1000 / 30); // Poll at 30Hz
+                }
+            }, 100);
+        }
+
+        // -------------------------------------------------------------------------
+        // Message handler — receives commands from React Native
+        // -------------------------------------------------------------------------
+
+        function handleMessage(event) {
+            var data;
+            try {
+                data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+            } catch (_e) {
+                return;
+            }
+
+            if (!data || !data.type) return;
+
+            switch (data.type) {
+                case 'load-code':
+                    if (data.payload) {
+                        compositionConfig = {
+                            width: data.payload.compositionWidth || 1920,
+                            height: data.payload.compositionHeight || 1080,
+                            fps: data.payload.fps || 30,
+                            durationInFrames: data.payload.durationInFrames || 150,
+                        };
+                        currentComponent = loadUserComponent(data.payload.code || '');
+                        renderPlayer();
+                    }
+                    break;
+
+                case 'play':
+                    if (playerRef && typeof playerRef.play === 'function') {
+                        playerRef.play();
+                        postToRN('playback-state', { isPlaying: true });
+                    }
+                    break;
+
+                case 'pause':
+                    if (playerRef && typeof playerRef.pause === 'function') {
+                        playerRef.pause();
+                        postToRN('playback-state', { isPlaying: false });
+                    }
+                    break;
+
+                case 'seek':
+                    if (playerRef && typeof playerRef.seekTo === 'function' && data.payload) {
+                        playerRef.seekTo(data.payload.frame);
+                        postToRN('frame-update', { frame: data.payload.frame });
+                    }
+                    break;
+
+                case 'set-resolution':
+                    if (data.payload && typeof data.payload.scale === 'number') {
+                        currentScale = data.payload.scale;
+                        renderPlayer();
+                    }
+                    break;
+
+                case 'set-speed':
+                    if (data.payload && typeof data.payload.rate === 'number') {
+                        currentSpeed = data.payload.rate;
+                        renderPlayer();
+                    }
+                    break;
+
+                case 'toggle-loop':
+                    if (data.payload && typeof data.payload.loop === 'boolean') {
+                        isLooping = data.payload.loop;
+                        renderPlayer();
+                    }
+                    break;
+            }
+        }
+
+        document.addEventListener('message', handleMessage);
+        window.addEventListener('message', handleMessage);
+
+        // -------------------------------------------------------------------------
+        // Signal ready
+        // -------------------------------------------------------------------------
+
+        loadingEl.classList.add('hidden');
+        postToRN('ready', {});
+
+    </script>
+</body>
+
+</html>

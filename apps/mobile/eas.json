@@ -1,0 +1,49 @@
+{
+    "cli": {
+        "version": ">= 12.0.0"
+    },
+    "build": {
+        "development": {
+            "developmentClient": true,
+            "distribution": "internal",
+            "ios": {
+                "simulator": true
+            },
+            "env": {
+                "APP_VARIANT": "development",
+                "API_URL": "http://localhost:3001"
+            }
+        },
+        "preview": {
+            "distribution": "internal",
+            "android": {
+                "credentialsSource": "local",
+                "buildType": "apk"
+            },
+            "env": {
+                "APP_VARIANT": "preview",
+                "API_URL": "https://renderflow-api-staging.fly.dev"
+            }
+        },
+        "production": {
+            "autoIncrement": true,
+            "env": {
+                "APP_VARIANT": "production",
+                "API_URL": "https://renderflow-api.fly.dev"
+            }
+        }
+    },
+    "submit": {
+        "production": {
+            "android": {
+                "track": "internal",
+                "releaseStatus": "draft"
+            },
+            "ios": {
+                "appleId": "PLACEHOLDER_NEEDS_APPLE_DEVELOPER_ACCOUNT",
+                "ascAppId": "PLACEHOLDER_NEEDS_APPLE_DEVELOPER_ACCOUNT",
+                "appleTeamId": "PLACEHOLDER_NEEDS_APPLE_DEVELOPER_ACCOUNT"
+            }
+        }
+    }
+}

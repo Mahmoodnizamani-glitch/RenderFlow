@@ -1,0 +1,59 @@
+# -----------------------------------------------
+# RenderFlow Render Worker — Local Development
+#
+# Usage:
+#   docker compose up --build
+#
+# Resource limits per constraint: 4 CPU, 4GB RAM, 256 PID limit
+# -----------------------------------------------
+
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  render-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      - NODE_ENV=development
+      - REDIS_URL=redis://redis:6379
+      - R2_ENDPOINT=${R2_ENDPOINT}
+      - R2_ACCESS_KEY=${R2_ACCESS_KEY}
+      - R2_SECRET_KEY=${R2_SECRET_KEY}
+      - R2_BUCKET=${R2_BUCKET:-renderflow-videos}
+      - HEALTH_PORT=3001
+      - WORKER_CONCURRENCY=1
+      - JOB_TIMEOUT_MS=1800000
+      - LOG_LEVEL=debug
+    ports:
+      - "3001:3001"
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: "4"
+          memory: 4G
+          pids: 256
+    # Security hardening
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp:size=2G,mode=1777
+    restart: unless-stopped
+
+volumes:
+  redis-data:
